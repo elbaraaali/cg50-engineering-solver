@@ -1,0 +1,6 @@
+assets-cg/icon-uns.png:
+  type: bopti-image
+  name: icon_uns
+assets-cg/icon-sel.png:
+  type: bopti-image
+  name: icon_sel
