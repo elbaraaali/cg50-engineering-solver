@@ -52,3 +52,6 @@ See `VALIDATION_REPORT.txt`.
 
 ## Build
 Requires fxSDK + gint + SuperH cross compiler. Build target is fx-CG50 using `fxsdk build-cg`.
+
+
+Build trigger refresh after enabling GitHub Actions.
