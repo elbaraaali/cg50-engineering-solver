@@ -1,0 +1,54 @@
+name: Build fx-CG50 add-in
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install host dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl git cmake python3 python3-pip build-essential pkg-config \
+            python3-pil libusb-1.0-0-dev libudev-dev libsdl2-dev libpng-dev libncurses-dev
+
+      - name: Install GiteaPC
+        run: |
+          curl -fsSL "https://git.planet-casio.com/Lephenixnoir/GiteaPC/raw/branch/master/install.sh" -o /tmp/giteapc-install.sh
+          bash /tmp/giteapc-install.sh </dev/null || true
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Install fxSDK and SuperH toolchain
+        shell: bash
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          giteapc install Lephenixnoir/fxsdk:noudisks2 Lephenixnoir/sh-elf-binutils Lephenixnoir/sh-elf-gcc
+          giteapc install Lephenixnoir/OpenLibm Vhex-Kernel-Core/fxlibc
+          giteapc install Lephenixnoir/sh-elf-gcc
+          giteapc install Lephenixnoir/gint
+          fxsdk --version
+          sh-elf-gcc --version
+
+      - name: Build ENGSOLV.g3a
+        shell: bash
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          fxsdk build-cg
+          test -s ENGSOLV.g3a
+          sha256sum ENGSOLV.g3a | tee ENGSOLV.g3a.sha256
+
+      - name: Upload calculator add-in
+        uses: actions/upload-artifact@v4
+        with:
+          name: ENGSOLV-CG50
+          path: |
+            ENGSOLV.g3a
+            ENGSOLV.g3a.sha256
+          if-no-files-found: error
