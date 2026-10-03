@@ -1,0 +1,29 @@
+CG50 Engineering Solver v0.4 - Validation Report
+================================================
+
+Core deterministic tests: 126 passed, 0 failed.
+Randomized constant-acceleration cross-checks: 14,000 passed, 0 failed.
+Clang AddressSanitizer: PASS.
+Clang UndefinedBehaviorSanitizer: PASS.
+Strict GCC core build (-Wall -Wextra -Werror -pedantic): PASS.
+CG50 UI C syntax check against gint API stubs: PASS.
+
+New v0.4 coverage
+-----------------
+- Polynomial CAS simplifier/expander: x+x, coefficient collection, polynomial expansion.
+- Taylor ODE single-step method, orders 1 through 4.
+- Bisection, False Position, Newton-Raphson, Secant retained and re-tested.
+- Position -> velocity -> acceleration by numerical differentiation.
+- Velocity -> acceleration and position by differentiation/integration.
+- Acceleration -> velocity and position by numerical integration with initial conditions.
+- Constant-acceleration equation rearrangements, including time quadratic roots.
+- Projectile, normal/tangential acceleration, energy, momentum, impulse, restitution.
+- Existing calculus, ODE, matrix and parser tests retained.
+
+Important limits
+----------------
+- CAS simplifier is deliberately limited to polynomials in x, degree <= 12, using +, -, *, ^ and parentheses.
+  Unsupported symbolic forms are rejected rather than guessed.
+- Motion-function menu uses x as the time variable (x = t).
+- Numerical derivatives/integrals have finite numerical precision; results are checked for parser/domain failures.
+- A native ENGSOLV.g3a was not produced in this runtime because the fxSDK/SuperH toolchain is not installed and this runtime cannot reach the external forge to install it.
