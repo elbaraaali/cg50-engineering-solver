@@ -5,9 +5,13 @@ on:
   push:
     branches: [ main ]
 
+concurrency:
+  group: cg50-build-main
+  cancel-in-progress: true
+
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
       - name: Checkout
@@ -31,7 +35,6 @@ jobs:
           export PATH="$HOME/.local/bin:$PATH"
           giteapc install Lephenixnoir/fxsdk:noudisks2 Lephenixnoir/sh-elf-binutils Lephenixnoir/sh-elf-gcc
           giteapc install Lephenixnoir/OpenLibm Vhex-Kernel-Core/fxlibc
-          giteapc install Lephenixnoir/sh-elf-gcc
           giteapc install Lephenixnoir/gint
           fxsdk --version
           sh-elf-gcc --version
