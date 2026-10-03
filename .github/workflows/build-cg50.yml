@@ -24,25 +24,39 @@ jobs:
             python3-pil libusb-1.0-0-dev libudev-dev libsdl2-dev libpng-dev libncurses-dev
 
       - name: Install GiteaPC
+        shell: bash
         run: |
+          set -euxo pipefail
           curl -fsSL "https://git.planet-casio.com/Lephenixnoir/GiteaPC/raw/branch/master/install.sh" -o /tmp/giteapc-install.sh
-          bash /tmp/giteapc-install.sh </dev/null || true
+          printf '\n' | bash /tmp/giteapc-install.sh
+          source "$HOME/.profile" || true
+          export PATH="$PATH:$HOME/.local/bin"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          command -v giteapc
+          giteapc --help >/dev/null
 
       - name: Install fxSDK and SuperH toolchain
         shell: bash
         run: |
-          export PATH="$HOME/.local/bin:$PATH"
+          set -euxo pipefail
+          source "$HOME/.profile" || true
+          export PATH="$PATH:$HOME/.local/bin"
+          command -v giteapc
           giteapc install Lephenixnoir/fxsdk:noudisks2 Lephenixnoir/sh-elf-binutils Lephenixnoir/sh-elf-gcc
           giteapc install Lephenixnoir/OpenLibm Vhex-Kernel-Core/fxlibc
+          giteapc install Lephenixnoir/sh-elf-gcc
           giteapc install Lephenixnoir/gint
+          command -v fxsdk
+          command -v sh-elf-gcc
           fxsdk --version
           sh-elf-gcc --version
 
       - name: Build ENGSOLV.g3a
         shell: bash
         run: |
-          export PATH="$HOME/.local/bin:$PATH"
+          set -euxo pipefail
+          source "$HOME/.profile" || true
+          export PATH="$PATH:$HOME/.local/bin"
           fxsdk build-cg
           test -s ENGSOLV.g3a
           sha256sum ENGSOLV.g3a | tee ENGSOLV.g3a.sha256
