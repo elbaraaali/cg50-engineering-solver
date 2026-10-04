@@ -42,10 +42,10 @@ jobs:
           source "$HOME/.profile" || true
           export PATH="$PATH:$HOME/.local/bin"
           command -v giteapc
-          giteapc install Lephenixnoir/fxsdk:noudisks2 Lephenixnoir/sh-elf-binutils Lephenixnoir/sh-elf-gcc
-          giteapc install Lephenixnoir/OpenLibm Vhex-Kernel-Core/fxlibc
-          giteapc install Lephenixnoir/sh-elf-gcc
-          giteapc install Lephenixnoir/gint
+          giteapc install -y Lephenixnoir/fxsdk:noudisks2 Lephenixnoir/sh-elf-binutils Lephenixnoir/sh-elf-gcc
+          giteapc install -y Lephenixnoir/OpenLibm Vhex-Kernel-Core/fxlibc
+          giteapc install -y Lephenixnoir/sh-elf-gcc
+          giteapc install -y Lephenixnoir/gint
           command -v fxsdk
           command -v sh-elf-gcc
           fxsdk --version
